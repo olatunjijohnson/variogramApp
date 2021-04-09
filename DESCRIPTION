@@ -1,0 +1,13 @@
+Package: variogramApp
+Type: Package
+Title: Shiny application for illustrating variogram
+Version: 0.1.0
+Author: Olatunji Johnson [cre, aut] (<https://orcid.org/0000-0002-4080-0999>)
+Maintainer: Olatunji Johnson <olatunjijohnson21111@gmail.com>
+Description: The variogramApp package runs a Shiny web application that allows for
+    explore variogram by varying its parameters. It also allows user to visualise the
+    reaisation of its corresponding Gaussian process.
+Imports: geoR, ggplot2, shiny, dplyr
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
