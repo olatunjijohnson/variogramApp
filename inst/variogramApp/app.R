@@ -682,8 +682,8 @@ server <- function(input, output, session) {
     tau <- input$tau
     kappa = input$kappa
     cov.model = cor.names[as.numeric(input$covmodel)]
-    U <- as.matrix(dist(coords))
-    Sigma <- cov.spatial(obj = U, cov.model = cov.model, cov.pars = c(sigma, phi), kappa = kappa)
+    # U <- dist(coords)
+    # Sigma <- cov.spatial(obj = U, cov.model = cov.model, cov.pars = c(sigma, phi), kappa = kappa)
     col <- rev(terrain.colors(255))
     my.l <- list()
     my.l$cov.model <- cov.model
@@ -694,11 +694,38 @@ server <- function(input, output, session) {
       my.l$kappa <- kappa
     } else my.l$kappa <- NULL
     
+    # sim <- grf(grid = expand.grid(0:input$domain2, 0:input$domain2),
+    #                       cov.model = "gaussian", cov.pars = c(sigma2, phi), nugget = tau2)
     
     m1 <- list()
     p1 <- list()
     for(i in 1:as.numeric(input$nsim)){
-      Y <- t(chol(Sigma))%*%rnorm(nrow(U)) + rnorm(n = nrow(U), sd = sqrt(tau))
+      # Y <- t(chol(as.matrix(Sigma)))%*%rnorm(nrow(coords)) + rnorm(n = nrow(coords), sd = sqrt(tau))
+      
+      if(input$dim == 1){
+        coords <- seq(0, as.numeric(input$domain1), by=1)
+        Y <- grf(grid = cbind(x= seq(0, as.numeric(input$domain1), by=1), 
+                                    y= seq(0, as.numeric(input$domain1), by=1)),
+                 cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+      }else{
+        if(input$domain2 == 150100){
+          Y <- grf(grid = expand.grid(x= seq(0, 150, length.out = 50), 
+                                      y= seq(0, 100, length.out = 50)),
+                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+        }else{
+          
+          Y <- grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+                                      y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
+                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+        }
+      }
+      
+      # Y <- grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+      #                             y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
+      #          cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+      # 
+      
+      
 
       if(input$dim == 1){
         simu.data <- data.frame(x=coords, y=coords, Y)
