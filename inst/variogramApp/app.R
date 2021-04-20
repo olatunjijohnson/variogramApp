@@ -699,24 +699,24 @@ server <- function(input, output, session) {
     
     m1 <- list()
     p1 <- list()
-    for(i in 1:as.numeric(input$nsim)){
+    
       # Y <- t(chol(as.matrix(Sigma)))%*%rnorm(nrow(coords)) + rnorm(n = nrow(coords), sd = sqrt(tau))
       
       if(input$dim == 1){
         coords <- seq(0, as.numeric(input$domain1), by=1)
-        Y <- grf(grid = cbind(x= seq(0, as.numeric(input$domain1), by=1), 
+        Y <- as.matrix(grf(grid = cbind(x= seq(0, as.numeric(input$domain1), by=1), 
                                     y= seq(0, as.numeric(input$domain1), by=1)),
-                 cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+                 cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
       }else{
         if(input$domain2 == 150100){
-          Y <- grf(grid = expand.grid(x= seq(0, 150, length.out = 50), 
+          Y <- as.matrix(grf(grid = expand.grid(x= seq(0, 150, length.out = 50), 
                                       y= seq(0, 100, length.out = 50)),
-                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
         }else{
           
-          Y <- grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+          Y <- as.matrix(grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
                                       y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
-                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
+                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
         }
       }
       
@@ -725,10 +725,10 @@ server <- function(input, output, session) {
       #          cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = 1, kappa = kappa)$data
       # 
       
-      
+    for(i in 1:as.numeric(input$nsim)){
 
       if(input$dim == 1){
-        simu.data <- data.frame(x=coords, y=coords, Y)
+        simu.data <- data.frame(x=coords, y=coords, Y = Y[,i])
         ##### Take the subset of the simulated data
         if(input$sampling=="random"){
           sam.data <- simu.data %>% sample_n(input$sample)
@@ -743,7 +743,7 @@ server <- function(input, output, session) {
         p1[[i]] <- ggvario(coords = sam.data[, 1:2], data = sam.data[,3], theo=T, my.l=my.l,
                            envelop = F, bins = input$nbins, maxdist = as.numeric(input$maxdist), xlab = "time")
       }else{
-        simu.data <- data.frame(coords, Y)
+        simu.data <- data.frame(coords, Y =Y[,i])
         ##### Take the subset of the simulated data
         if(input$sampling=="random"){
           sam.data <- simu.data %>% sample_n(input$sample)
