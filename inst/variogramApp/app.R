@@ -13,6 +13,7 @@ library(ggplot2)
 library(dplyr)
 require(raster)
 require(tmap)
+require(RandomFields)
 require("tmaptools")
 # source('~/Documents/Lancaster/Lancaster Job/projects/LOALOA/rcode/loaloa/myvariogramplot.R')
 
@@ -703,22 +704,22 @@ server <- function(input, output, session) {
       # Y <- t(chol(as.matrix(Sigma)))%*%rnorm(nrow(coords)) + rnorm(n = nrow(coords), sd = sqrt(tau))
       if(cov.model=="matern"){
         if(input$dim == 1){
-          model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
-            RMnugget(var = tau) 
-          RFoptions(spConform=FALSE)
-          Y <- as.matrix(RFsimulate(model = model, x = seq(0, as.numeric(input$domain1), by=1),  n = as.numeric(input$nsim)))
+          model <- RandomFields::RMmatern(nu = kappa, var = sigma, scale = phi) + 
+            RandomFields::RMnugget(var = tau) 
+          RandomFields::RFoptions(spConform=FALSE)
+          Y <- as.matrix(RandomFields::RFsimulate(model = model, x = seq(0, as.numeric(input$domain1), by=1),  n = as.numeric(input$nsim)))
         }else{
           if(input$domain2 == 150100){
-            model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
-              RMnugget(var = tau) 
-            RFoptions(spConform=FALSE)
-            Y <- as.matrix(RFsimulate(model = model, x = expand.grid(x= seq(0, 150, length.out = 50), 
+            model <- RandomFields::RMmatern(nu = kappa, var = sigma, scale = phi) + 
+              RandomFields::RMnugget(var = tau) 
+            RandomFields::RFoptions(spConform=FALSE)
+            Y <- as.matrix(RandomFields::RFsimulate(model = model, x = expand.grid(x= seq(0, 150, length.out = 50), 
                                                            y= seq(0, 100, length.out = 50)),  n = as.numeric(input$nsim)))
           }else{
-            model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
-              RMnugget(var = tau) 
-            RFoptions(spConform=FALSE)
-            Y <- as.matrix(RFsimulate(model = model, x = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+            model <- RandomFields::RMmatern(nu = kappa, var = sigma, scale = phi) + 
+              RandomFields::RMnugget(var = tau) 
+            RandomFields::RFoptions(spConform=FALSE)
+            Y <- as.matrix(RandomFields::RFsimulate(model = model, x = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
                                                            y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),  n = as.numeric(input$nsim)))
           }
           
