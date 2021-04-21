@@ -701,24 +701,49 @@ server <- function(input, output, session) {
     p1 <- list()
     
       # Y <- t(chol(as.matrix(Sigma)))%*%rnorm(nrow(coords)) + rnorm(n = nrow(coords), sd = sqrt(tau))
-      
-      if(input$dim == 1){
-        coords <- seq(0, as.numeric(input$domain1), by=1)
-        Y <- as.matrix(grf(grid = cbind(x= seq(0, as.numeric(input$domain1), by=1), 
-                                    y= seq(0, as.numeric(input$domain1), by=1)),
-                 cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
-      }else{
-        if(input$domain2 == 150100){
-          Y <- as.matrix(grf(grid = expand.grid(x= seq(0, 150, length.out = 50), 
-                                      y= seq(0, 100, length.out = 50)),
-                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
+      if(cov.model=="matern"){
+        if(input$dim == 1){
+          model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
+            RMnugget(var = tau) 
+          RFoptions(spConform=FALSE)
+          Y <- as.matrix(RFsimulate(model = model, x = seq(0, as.numeric(input$domain1), by=1),  n = as.numeric(input$nsim)))
         }else{
+          if(input$domain2 == 150100){
+            model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
+              RMnugget(var = tau) 
+            RFoptions(spConform=FALSE)
+            Y <- as.matrix(RFsimulate(model = model, x = expand.grid(x= seq(0, 150, length.out = 50), 
+                                                           y= seq(0, 100, length.out = 50)),  n = as.numeric(input$nsim)))
+          }else{
+            model <- RMmatern(nu = kappa, var = sigma, scale = phi) + 
+              RMnugget(var = tau) 
+            RFoptions(spConform=FALSE)
+            Y <- as.matrix(RFsimulate(model = model, x = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+                                                           y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),  n = as.numeric(input$nsim)))
+          }
           
-          Y <- as.matrix(grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
-                                      y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
-                   cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
+        }
+
+      }else{
+        if(input$dim == 1){
+          coords <- seq(0, as.numeric(input$domain1), by=1)
+          Y <- as.matrix(grf(grid = cbind(x= seq(0, as.numeric(input$domain1), by=1), 
+                                          y= seq(0, as.numeric(input$domain1), by=1)),
+                             cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
+        }else{
+          if(input$domain2 == 150100){
+            Y <- as.matrix(grf(grid = expand.grid(x= seq(0, 150, length.out = 50), 
+                                                  y= seq(0, 100, length.out = 50)),
+                               cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
+          }else{
+            
+            Y <- as.matrix(grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
+                                                  y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
+                               cov.model = cov.model, cov.pars = c(sigma, phi), nugget = tau, nsim = as.numeric(input$nsim), kappa = kappa)$data)
+          }
         }
       }
+
       
       # Y <- grf(grid = expand.grid(x= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3), 
       #                             y= seq(0, as.numeric(input$domain2), length.out = as.numeric(input$domain2)/3)),
