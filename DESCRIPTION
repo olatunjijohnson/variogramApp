@@ -7,7 +7,7 @@ Maintainer: Olatunji Johnson <olatunjijohnson21111@gmail.com>
 Description: The variogramApp package runs a Shiny web application that allows for
     explore variogram by varying its parameters. It also allows user to visualise the
     reaisation of its corresponding Gaussian process.
-Imports: geoR, ggplot2, shiny, dplyr, raster
+Imports: geoR, ggplot2, shiny, dplyr, raster, RandomFields
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
