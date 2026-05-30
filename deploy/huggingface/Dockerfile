@@ -1,17 +1,16 @@
-FROM rocker/shiny:4.4.1
+FROM eddelbuettel/r2u:22.04
 
-# Install R packages using Posit Package Manager pre-built binaries (fast)
-RUN R -e "install.packages( \
-    c('geoR', 'ggplot2', 'dplyr'), \
-    repos = 'https://packagemanager.posit.co/cran/__linux__/jammy/latest' \
-  )"
+# install2.r uses BSPM: installs as apt .deb where available, CRAN binary otherwise
+# System dependencies are handled automatically
+RUN install2.r --error shiny geoR ggplot2 dplyr
 
-# Configure shiny-server to listen on port 7860 (required by Hugging Face)
-COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
+RUN R -e "library(shiny);   cat('shiny OK\n')"
+RUN R -e "library(geoR);    cat('geoR OK\n')"
+RUN R -e "library(ggplot2); cat('ggplot2 OK\n')"
+RUN R -e "library(dplyr);   cat('dplyr OK\n')"
 
-# Copy the Shiny app
-COPY app/ /srv/shiny-server/
+COPY app/ /app/
 
 EXPOSE 7860
 
-CMD ["/usr/bin/shiny-server"]
+CMD ["R", "-e", "shiny::runApp('/app', host='0.0.0.0', port=7860, launch.browser=FALSE)"]
