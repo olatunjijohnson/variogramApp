@@ -1,8 +1,10 @@
 # run_app.R
 #
-#' @title A function to run the app
-#' @description Runs the MBGapp Shiny web application.
-#' @details The function outputs the app for the user to supply the data and analysis the data
+#' @title Run the variogramApp Shiny application
+#' @description Launches the variogramApp interactive Shiny web application
+#'   for exploring variograms and Gaussian random fields.
+#' @details Opens the app in the default browser. Use Ctrl+C (or the Stop
+#'   button in RStudio) to stop the app when finished.
 #' @export
 run_variog_app <- function() {
   appDir <- system.file('variogramApp', package='variogramApp')

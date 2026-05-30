@@ -16,41 +16,148 @@ knitr::opts_chunk$set(
 # variogramApp
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/olatunjijohnson/variogramApp/workflows/R-CMD-check/badge.svg)](https://github.com/olatunjijohnson/variogramApp/actions)
 <!-- badges: end -->
 
-The goal of variogramApp is to allows user to understand variogram and perform simulation in one and two dimensions
+An interactive Shiny app for teaching and exploring **variograms** and
+**Gaussian random fields**. Designed for statistics courses and workshops.
+
+---
+
+## Try it online
+
+> **Hosted app:** *(coming soon — deploy your own copy with the instructions below)*
+
+Once hosted, students can access it instantly from any browser — no R
+installation needed. Share the URL or print a QR code for the classroom.
+
+---
+
+## What the app does
+
+- Choose from **12 covariance models** (Matérn, Exponential, Gaussian,
+  Spherical, and more) and see the formula update in real time
+- Adjust **variance** (σ²), **scale** (φ), **nugget** (τ²) and
+  **smoothness** (κ) with immediate visual feedback
+- Simulate Gaussian random fields in **1D** (time series) or **2D** (spatial map)
+- Compare the **empirical semivariogram** from a random or inhibitory sample
+  against the **theoretical curve**
+- Toggle **Monte Carlo permutation envelopes** for a visual significance test
+- Show **bin counts** on the variogram plot
+- **Download** the variogram plot as a PNG
+
+---
 
 ## Installation
 
-<!-- You can install the released version of variogramApp from [CRAN](https://CRAN.R-project.org) with: -->
+### Option A — install the package (recommended for repeated use)
 
-<!-- ``` r -->
-<!-- install.packages("variogramApp") -->
-<!-- ``` -->
-
-You can install the development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("olatunjijohnson/variogramApp", ref="master")
+```r
+# install.packages("remotes")   # lighter than devtools
+remotes::install_github("olatunjijohnson/variogramApp")
 ```
-## Example
 
-This is a basic example which shows you how to solve a common problem:
+Then launch the app with:
 
-```{r eval=FALSE}
+```r
 library(variogramApp)
-## basic example code
-## run the App
-run_variog_app()  # use the code
+run_variog_app()
 ```
 
+### Option B — run directly without installing
 
-## Alternative way to run in R
+This is the quickest option for a computer lab where students already have R
+and the dependencies installed:
 
-You can also run the following line of code to run in R
-
-```{r eval=FALSE}
-shiny::runGitHub(repo="variogramApp", username= "olatunjijohnson", ref="master", subdir = "inst/variogramApp")
+```r
+# install.packages(c("shiny", "geoR", "ggplot2", "dplyr"))
+shiny::runGitHub(
+  repo     = "variogramApp",
+  username = "olatunjijohnson",
+  subdir   = "inst/variogramApp"
+)
 ```
 
+---
+
+## Deploy your own hosted copy (for instructors)
+
+Hosting on [shinyapps.io](https://www.shinyapps.io) gives students
+**zero-install access** via a URL or QR code.
+
+### 1. Create a free account
+
+Sign up at <https://www.shinyapps.io> (the free tier allows up to 5 apps
+and 25 active hours/month — enough for a class).
+
+### 2. Install rsconnect
+
+```r
+install.packages("rsconnect")
+```
+
+### 3. Connect your account
+
+Copy your token from the shinyapps.io dashboard
+(**Account → Tokens → Show**) and run:
+
+```r
+rsconnect::setAccountInfo(
+  name   = "YOUR_ACCOUNT_NAME",
+  token  = "YOUR_TOKEN",
+  secret = "YOUR_SECRET"
+)
+```
+
+### 4. Deploy
+
+```r
+rsconnect::deployApp(
+  appDir  = system.file("variogramApp", package = "variogramApp"),
+  appName = "variogramApp"
+)
+```
+
+Your app will be live at `https://YOUR_ACCOUNT_NAME.shinyapps.io/variogramApp`.
+
+---
+
+## Generate a QR code for the classroom
+
+Once you have your hosted URL, generate a QR code students can scan:
+
+```r
+# install.packages("qrcode")
+library(qrcode)
+qr <- qr_code("https://YOUR_ACCOUNT_NAME.shinyapps.io/variogramApp")
+plot(qr)
+
+# Save as PNG to include in slides or a handout
+png("variogramApp_qr.png", width = 300, height = 300)
+plot(qr)
+dev.off()
+```
+
+---
+
+## Dependencies
+
+The app requires the following R packages (installed automatically when
+you use `remotes::install_github`):
+
+| Package | Purpose |
+|---------|---------|
+| `shiny` | Web application framework |
+| `geoR` | Geostatistical functions and random field simulation |
+| `ggplot2` | Plotting |
+| `dplyr` | Data manipulation |
+
+---
+
+## Citation
+
+If you use this app in teaching or research, please cite:
+
+> Johnson, O. (*2021*). *variogramApp: An interactive Shiny application for
+> exploring variograms and Gaussian random fields.*
+> <https://github.com/olatunjijohnson/variogramApp>

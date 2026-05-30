@@ -308,7 +308,7 @@ ui <- fluidPage(
         condition = "input.sampling == 'regular'",
         numericInput("delta", "Minimum distance between samples", 3, min = 0)
       ),
-      numericInput("sample", "Number of sample locations", 200, min = 2),
+      numericInput("sample", "Number of sample locations", 100, min = 2),
 
       sliderInput("maxdist", "Max variogram distance:", min = 0, max = 142, value = 50, step = 1),
       sliderInput("nbins",   "Number of bins:",         min = 2, max = 100, value = 15, step = 1),
