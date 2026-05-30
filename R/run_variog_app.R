@@ -7,7 +7,7 @@
 run_variog_app <- function() {
   appDir <- system.file('variogramApp', package='variogramApp')
   if (appDir == "") {
-    stop("Could not find MBGapp. Try re-installing `mypackage`.", call. = FALSE)
+    stop("Could not find variogramApp. Try re-installing `variogramApp`.", call. = FALSE)
   }
 
   shiny::runApp(appDir, display.mode = "normal")
