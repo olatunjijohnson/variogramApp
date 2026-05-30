@@ -17,12 +17,10 @@ workshops.
 
 ## Try it online
 
-> **Hosted app:** *(coming soon — deploy your own copy with the
-> instructions below)*
+> **Hosted app:** https://olatunjijohnson-variogramapp.hf.space
 
-Once hosted, students can access it instantly from any browser — no R
-installation needed. Share the URL or print a QR code for the
-classroom.
+Students can access it instantly from any browser — no R installation
+needed. Share the URL or print a QR code for the classroom (see below).
 
 ------------------------------------------------------------------------
 
@@ -114,18 +112,19 @@ rsconnect::deployApp(
 ```
 
 Your app will be live at
-`https://YOUR_ACCOUNT_NAME.shinyapps.io/variogramApp`.
+`https://olatunjijohnson-variogramapp.hf.space`.
 
 ------------------------------------------------------------------------
 
 ## Generate a QR code for the classroom
 
-Once you have your hosted URL, generate a QR code students can scan:
+Generate a QR code students can scan to open the app on their phones or
+laptops:
 
 ``` r
 # install.packages("qrcode")
 library(qrcode)
-qr <- qr_code("https://YOUR_ACCOUNT_NAME.shinyapps.io/variogramApp")
+qr <- qr_code("https://olatunjijohnson-variogramapp.hf.space")
 plot(qr)
 
 # Save as PNG to include in slides or a handout

@@ -23,3 +23,5 @@ An interactive Shiny app for teaching and exploring variograms and Gaussian rand
 ## Source
 
 Source code: https://github.com/olatunjijohnson/variogramApp
+
+Hosted at: https://olatunjijohnson-variogramapp.hf.space
